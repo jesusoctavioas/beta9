@@ -538,11 +538,12 @@ func (s *Worker) spawn(request *types.ContainerRequest, spec *specs.Spec, output
 		Spec:       spec,
 		ExitCode:   -1,
 		OutputWriter: common.NewOutputWriter(func(s string) {
-			outputChan <- common.OutputMsg{
-				Msg:     string(s),
-				Done:    false,
-				Success: false,
-			}
+			log.Printf(s)
+			// outputChan <- common.OutputMsg{
+			// 	Msg:     string(s),
+			// 	Done:    false,
+			// 	Success: false,
+			// }
 		}),
 		LogBuffer: common.NewLogBuffer(),
 	}
@@ -622,8 +623,8 @@ func (s *Worker) spawn(request *types.ContainerRequest, spec *specs.Spec, output
 
 	// Log metrics
 	// go s.workerMetrics.EmitContainerUsage(ctx, request)
-	go s.eventRepo.PushContainerStartedEvent(request.ContainerId, s.workerId, request)
-	defer func() { go s.eventRepo.PushContainerStoppedEvent(request.ContainerId, s.workerId, request) }()
+	// go s.eventRepo.PushContainerStartedEvent(request.ContainerId, s.workerId, request)
+	// defer func() { go s.eventRepo.PushContainerStoppedEvent(request.ContainerId, s.workerId, request) }()
 
 	// Capture resource usage (cpu/mem/gpu)
 	pidChan := make(chan int, 1)
@@ -848,14 +849,14 @@ func (s *Worker) startup() error {
 		return fmt.Errorf("failed to create logs directory: %w", err)
 	}
 
-	go s.eventRepo.PushWorkerStartedEvent(s.workerId)
+	// go s.eventRepo.PushWorkerStartedEvent(s.workerId)
 
 	return nil
 }
 
 func (s *Worker) shutdown() error {
 	log.Println("Shutting down...")
-	defer s.eventRepo.PushWorkerStoppedEvent(s.workerId)
+	// defer s.eventRepo.PushWorkerStoppedEvent(s.workerId)
 
 	var errs error
 

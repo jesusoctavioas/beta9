@@ -120,7 +120,7 @@ func (r *ContainerLogger) CaptureLogs(containerId string, outputChan chan common
 			log.Printf("<%s> - %s\n", containerId, o.Msg)
 
 			// Write logs to in-memory log buffer as well
-			instance.LogBuffer.Write([]byte(o.Msg))
+			// instance.LogBuffer.Write([]byte(o.Msg))
 		}
 
 		if o.Done {
