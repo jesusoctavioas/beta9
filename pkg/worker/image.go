@@ -181,7 +181,7 @@ func (c *ImageClient) PullLazy(request *types.ContainerRequest) error {
 	var mountOptions *clip.MountOptions = &clip.MountOptions{
 		ArchivePath:           remoteArchivePath,
 		MountPoint:            fmt.Sprintf("%s/%s", c.imageMountPath, imageId),
-		Verbose:               false,
+		Verbose:               true,
 		CachePath:             localCachePath,
 		ContentCache:          c.cacheClient,
 		ContentCacheAvailable: c.cacheClient != nil,
