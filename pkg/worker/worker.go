@@ -538,7 +538,7 @@ func (s *Worker) spawn(request *types.ContainerRequest, spec *specs.Spec, output
 		Spec:       spec,
 		ExitCode:   -1,
 		OutputWriter: common.NewOutputWriter(func(s string) {
-			log.Printf(s)
+			log.Printf("%s", s)
 			// outputChan <- common.OutputMsg{
 			// 	Msg:     string(s),
 			// 	Done:    false,
