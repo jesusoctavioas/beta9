@@ -150,9 +150,10 @@ func (s *RunCServer) RunCStreamLogs(req *pb.RunCStreamLogsRequest, stream pb.Run
 
 		if n > 0 {
 			logEntry.Msg = string(buffer[:n])
-			if err := stream.Send(logEntry); err != nil {
-				return err
-			}
+			log.Println("logEntry.Msg: ", logEntry.Msg)
+			// if err := stream.Send(logEntry); err != nil {
+			// 	return err
+			// }
 
 			continue
 		}
