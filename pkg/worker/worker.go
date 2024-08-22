@@ -163,11 +163,11 @@ func NewWorker() (*Worker, error) {
 		return nil, err
 	}
 
-	workerMetrics, err := NewWorkerMetrics(ctx, workerId, workerRepo, config.Monitoring)
-	if err != nil {
-		cancel()
-		return nil, err
-	}
+	// workerMetrics, err := NewWorkerMetrics(ctx, workerId, workerRepo, config.Monitoring)
+	// if err != nil {
+	// 	cancel()
+	// 	return nil, err
+	// }
 
 	return &Worker{
 		ctx:                     ctx,
@@ -195,7 +195,7 @@ func NewWorker() (*Worker, error) {
 		containerLogger: &ContainerLogger{
 			containerInstances: containerInstances,
 		},
-		workerMetrics:     workerMetrics,
+		// workerMetrics:     workerMetrics,
 		workerRepo:        workerRepo,
 		eventRepo:         eventRepo,
 		completedRequests: make(chan *types.ContainerRequest, 1000),
@@ -511,7 +511,7 @@ func (s *Worker) createOverlay(request *types.ContainerRequest, bundlePath strin
 
 // spawn a container using runc binary
 func (s *Worker) spawn(request *types.ContainerRequest, spec *specs.Spec, outputChan chan common.OutputMsg, opts *ContainerOptions) {
-	ctx, cancel := context.WithCancel(s.ctx)
+	_, cancel := context.WithCancel(s.ctx)
 
 	s.workerRepo.AddContainerToWorker(s.workerId, request.ContainerId)
 	defer s.workerRepo.RemoveContainerFromWorker(s.workerId, request.ContainerId)
@@ -621,13 +621,13 @@ func (s *Worker) spawn(request *types.ContainerRequest, spec *specs.Spec, output
 	}
 
 	// Log metrics
-	go s.workerMetrics.EmitContainerUsage(ctx, request)
+	// go s.workerMetrics.EmitContainerUsage(ctx, request)
 	go s.eventRepo.PushContainerStartedEvent(request.ContainerId, s.workerId, request)
 	defer func() { go s.eventRepo.PushContainerStoppedEvent(request.ContainerId, s.workerId, request) }()
 
 	// Capture resource usage (cpu/mem/gpu)
 	pidChan := make(chan int, 1)
-	go s.collectAndSendContainerMetrics(ctx, request, spec, pidChan)
+	// go s.collectAndSendContainerMetrics(ctx, request, spec, pidChan)
 
 	// Invoke runc process (launch the container)
 	exitCode, err = s.runcHandle.Run(s.ctx, containerId, opts.BundlePath, &runc.CreateOpts{
